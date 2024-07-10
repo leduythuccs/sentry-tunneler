@@ -1,6 +1,6 @@
 #![feature(let_chains)]
 
-use axum::{extract::State, response::IntoResponse, routing::post};
+use axum::{extract::State, response::IntoResponse, routing::get, routing::post};
 use config::TunnelConfig;
 use hyper::{header, StatusCode};
 use std::sync::Arc;
@@ -35,6 +35,7 @@ async fn main() {
 
   let app = axum::Router::new()
     .route(&config.tunnel_path, post(tunnel))
+    .route(&config.health_path, get(health_check))
     .layer(cors)
     .with_state(state);
 
@@ -74,6 +75,10 @@ async fn tunnel(State(config): State<Arc<TunnelConfig>>, body: String) -> Result
   } else {
     Ok(StatusCode::NO_CONTENT)
   }
+}
+
+async fn health_check() -> impl IntoResponse {
+  StatusCode::OK
 }
 
 fn init_logger() {

@@ -3,6 +3,7 @@ pub struct TunnelConfig {
   pub sentry_hosts: Option<Vec<String>>,
   pub allowed_project_ids: Option<Vec<String>>,
   pub tunnel_path: String,
+  pub health_path: String,
   pub listen_port: u16,
   pub cors_allowed_origins: Option<Vec<String>>,
 }
@@ -36,6 +37,7 @@ impl TunnelConfig {
     };
 
     let tunnel_path = std::env::var("TUNNEL_PATH").unwrap_or("/tunnel".to_string());
+    let health_path = std::env::var("HEALTH_PATH").unwrap_or("/health".to_string());
 
     let listen_port = std::env::var("LISTEN_PORT")
       .unwrap_or("3000".to_string())
@@ -46,6 +48,7 @@ impl TunnelConfig {
       sentry_hosts,
       allowed_project_ids,
       tunnel_path,
+      health_path,
       listen_port,
       cors_allowed_origins,
     }
